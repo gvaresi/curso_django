@@ -5,4 +5,4 @@ from django.http import HttpResponse
 
 
 def home(request):
-    return HttpResponse('Olá Django, Primeiro projeto Versão_15')
+    return HttpResponse('<html><body> Olá Django, Versão 19 </body></html>')
