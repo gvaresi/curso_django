@@ -139,6 +139,19 @@ COLLECTFAST_ENABLED = False
 
 AWS_ACCESS_KEY_ID = config('AWS_ACCESS_KEY_ID')
 
+# Configuração da Django Debug Toolbar
+
+INTERNAL_IPS = config('INTERNAL_IPS', cast=Csv(), default='127.0.0.1')
+
+# INTERNAL_IPS = [
+#     '127.0.0.1',
+# ]
+
+if DEBUG:
+    INSTALLED_APPS.append('debug_toolbar')
+    MIDDLEWARE.insert(0, 'debug_toolbar.middleware.DebugToolbarMiddleware')
+
+
 # STORAGE AWS CONFIGS IN S3 AWS
 # --------------------------------------------------------------------
 
