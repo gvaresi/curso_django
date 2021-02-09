@@ -13,6 +13,9 @@ import os
 from functools import partial
 from pathlib import Path
 
+import sentry_sdk
+from sentry_sdk.integrations.django import DjangoIntegration
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 import dj_database_url
 from decouple import config, Csv
@@ -81,15 +84,17 @@ WSGI_APPLICATION = 'pypro.wsgi.application'
 
 # Configuração da Django Debug Toolbar
 
-INTERNAL_IPS = config('INTERNAL_IPS', cast=Csv(), default='127.0.0.1')
-
 # INTERNAL_IPS = [
 #     '127.0.0.1',
 # ]
 
 if DEBUG:
     INSTALLED_APPS.append('debug_toolbar')
-    MIDDLEWARE.insert(0, 'debug_toolbar.middleware.DebugToolbarMiddleware',)
+    MIDDLEWARE.insert(1, 'debug_toolbar.middleware.DebugToolbarMiddleware')
+    # INTERNAL_IPS = config('INTERNAL_IPS', cast=Csv(), default='127.0.0.1')
+    INTERNAL_IPS = ['127.0.0.1']
+
+# DEBUG_TOOLBAR_CONFIG = {'INSERT_BEFORE': '</head>'}
 
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
@@ -142,13 +147,12 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'mediafiles')
-
 COLLECTFAST_ENABLED = False
 
-AWS_ACCESS_KEY_ID = config('AWS_ACCESS_KEY_ID')
+# AWS_ACCESS_KEY_ID = config('AWS_ACCESS_KEY_ID')
+AWS_ACCESS_KEY_ID = config('AWS_ACCESS_KEY_ID', default=False)
 
 # STORAGE AWS CONFIGS IN S3 AWS
 # --------------------------------------------------------------------
@@ -179,3 +183,8 @@ if AWS_ACCESS_KEY_ID:
 
     INSTALLED_APPS.append('s3_folder_storage')
     INSTALLED_APPS.append('storages')
+
+SENTRY_DSN = config('SENTRY_DSN', default=None)
+
+if SENTRY_DSN:
+    sentry_sdk.init(dsn=SENTRY_DSN, integrations=[DjangoIntegration()], traces_sample_rate=1.0, send_default_pii=True)

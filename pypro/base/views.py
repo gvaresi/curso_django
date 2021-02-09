@@ -5,4 +5,7 @@ from django.http import HttpResponse
 
 
 def home(request):
-    return HttpResponse('<html><body> Olá Django, Versão 22 </body></html>')
+    return HttpResponse('<html lang="pt-br">'
+                        '<head> <meta charset=UTF-8> </head>'
+                        '<body> Olá Django, Versão 29 </body>'
+                        '</html>')
