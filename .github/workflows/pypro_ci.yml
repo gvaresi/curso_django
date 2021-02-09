@@ -29,6 +29,7 @@ jobs:
         cp contrib/env-sample .env
     - name: Install dependencies
       run: |
+        pipenv install
         pip install -q pipenv
         pipenv sync --dev
     - name: Lint with flake8
